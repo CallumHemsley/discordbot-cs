@@ -27,7 +27,7 @@ namespace discordbot_cs
                 switch (e.Message.Text)
                 {
                     case "hello":
-                        e.Channel.SendMessage("waddup");
+                        await e.Channel.SendMessage("waddup");
                         break;
 
                     case "time":
@@ -57,21 +57,21 @@ namespace discordbot_cs
 
         }
 
-        private static void exit_bot(MessageEventArgs e)
+        private static async void exit_bot(MessageEventArgs e)
         {
             if (e.User.ToString() != "Nopply#9852") return;
-            e.Channel.SendMessage("Exiting... :skull_crossbones: ");
+            await e.Channel.SendMessage("Exiting... :skull_crossbones: ");
             Thread.Sleep(1000);
             Environment.Exit(0);
         }
 
-        private static void get_time(MessageEventArgs e)
+        private static async void get_time(MessageEventArgs e)
         {
             DateTime now = DateTime.Now;
-            e.Channel.SendMessage(now.ToString() + " :alarm_clock:");
+            await e.Channel.SendMessage(now.ToString() + " :alarm_clock:");
         }
 
-        private static void clean(MessageEventArgs e)
+        private static async void clean(MessageEventArgs e)
         {
 
         }
