@@ -15,7 +15,7 @@ namespace discordbot_cs
             #pragma warning disable CS1998
 
             // Async method lacks 'await' operators and will run synchronously
-            client.MessageReceived += async (s, e) =>
+            client.MessageReceived += async (s, e) => //e = event basically..
             {
                 // bot ignores itself.
                 if (e.Message.IsAuthor) return;
