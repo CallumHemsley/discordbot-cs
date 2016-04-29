@@ -32,10 +32,11 @@ namespace discordbot_cs
                 x.AllowMentionPrefix = true;
                 x.PrefixChar = '#';
                 x.HelpMode = HelpMode.Public;
-                x.ExecuteHandler += (s, e) => client.Log.Info("Command", $"[{((e.Server != null) ? e.Server.Name : "Private")}{((!e.Channel.IsPrivate) ? $"/#{e.Channel.Name}" : "")}] <@{e.User.Name}> {e.Command.Text} {((e.Args.Length > 0) ? "| " + string.Join(" ", e.Args) : "")}");
-                x.ErrorHandler = CommandError;
-            });
-        }
+            })
+            .UsingModules();
+
+            client.MessageReceived += async (s, e) => //e = event basically..
+
         /*{
             var client = new DiscordClient();
 
@@ -115,4 +116,3 @@ namespace discordbot_cs
         }
     }*/
     }
-}
