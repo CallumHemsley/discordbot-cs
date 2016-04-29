@@ -4,8 +4,11 @@ using Discord.Commands.Permissions.Levels;
 using Discord.Modules;
 using Discord.Legacy;
 using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 
 namespace discordbot_cs
 {
