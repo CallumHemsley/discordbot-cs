@@ -136,7 +136,6 @@ namespace discordbot_cs
             if (msg != null)
             {
                 client.ReplyError(e, msg);
-                client.Log.Error("Command", msg);
             }
         }
     }
