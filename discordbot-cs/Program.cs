@@ -1,4 +1,5 @@
-﻿using Discord;
+﻿
+using Discord;
 using Discord.Commands;
 using Discord.Commands.Permissions.Levels;
 using Discord.Modules;
@@ -51,16 +52,12 @@ namespace discordbot_cs
                 // message command switch.
                 switch (e.Message.Text)
                 {
-                    case "hello":
-                        await e.Channel.SendMessage("waddup");
+                    case "test":
+                        await e.Channel.SendMessage("Confirmed");
                         break;
 
                     case "exit":
                         exit_bot(e);
-                        break;
-
-                    case "clean":
-                        clean(e);
                         break;
 
                     default:
@@ -99,16 +96,6 @@ namespace discordbot_cs
             Environment.Exit(0);
         }
 
-        private static async void get_time(MessageEventArgs e)
-        {
-            DateTime now = DateTime.Now;
-            await e.Channel.SendMessage(now.ToString() + " :alarm_clock:");
-        }
-
-        private static async void clean(MessageEventArgs e)
-        {
-
-        }
         private void OnCommandError(object sender, CommandErrorEventArgs e)
         {
             string msg = e.Exception?.Message;
