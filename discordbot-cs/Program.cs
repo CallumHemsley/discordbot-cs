@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace discordbot_cs
 {
@@ -34,11 +35,6 @@ namespace discordbot_cs
                 x.HelpMode = HelpMode.Public;
             })
             .UsingModules();
-
-            client.MessageReceived += async (s, e) => //e = event basically..
-
-        /*{
-            var client = new DiscordClient();
 
             #pragma warning disable CS1998
 
@@ -114,5 +110,5 @@ namespace discordbot_cs
         {
 
         }
-    }*/
     }
+ }
