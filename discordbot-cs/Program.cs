@@ -33,6 +33,7 @@ namespace discordbot_cs
                 x.AllowMentionPrefix = true;
                 x.PrefixChar = '#';
                 x.HelpMode = HelpMode.Public;
+                x.ErrorHandler = OnCommandError;
             })
             .UsingModules();
 
@@ -52,10 +53,6 @@ namespace discordbot_cs
                 {
                     case "hello":
                         await e.Channel.SendMessage("waddup");
-                        break;
-
-                    case "time":
-                        get_time(e);
                         break;
 
                     case "exit":
@@ -80,6 +77,8 @@ namespace discordbot_cs
                     try
                     {
                         await client.Connect("MTcwOTIxNjQwMDE4OTY4NTc2.CgC43A.YehTx9EojzDxU4NrLoIr4hQu3XQ");
+                        client.SetGame("Type #help for help.");
+                        Console.WriteLine("Connected :)");
                         break;
                     }
                     catch (Exception ex)
@@ -109,6 +108,36 @@ namespace discordbot_cs
         private static async void clean(MessageEventArgs e)
         {
 
+        }
+        private void OnCommandError(object sender, CommandErrorEventArgs e)
+        {
+            string msg = e.Exception?.Message;
+            if (msg == null) //No exception - show a generic message
+            {
+                switch (e.ErrorType)
+                {
+                    case CommandErrorType.Exception:
+                        msg = "Unknown error.";
+                        break;
+                    case CommandErrorType.BadPermissions:
+                        msg = "You do not have permission to run this command.";
+                        break;
+                    case CommandErrorType.BadArgCount:
+                        msg = "You provided the incorrect number of arguments for this command.";
+                        break;
+                    case CommandErrorType.InvalidInput:
+                        msg = "Unable to parse your command, please check your input.";
+                        break;
+                    case CommandErrorType.UnknownCommand:
+                        msg = "Unknown command.";
+                        break;
+                }
+            }
+            if (msg != null)
+            {
+                client.ReplyError(e, msg);
+                client.Log.Error("Command", msg);
+            }
         }
     }
  }
