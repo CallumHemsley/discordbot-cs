@@ -50,20 +50,12 @@ namespace discordbot_cs
                 // message command switch.
                 switch (e.Message.Text)
                 {
-                    case "hello":
-                        await e.Channel.SendMessage("waddup");
-                        break;
-
-                    case "time":
-                        get_time(e);
+                    case "test":
+                        await e.Channel.SendMessage("test confirmed");
                         break;
 
                     case "exit":
                         exit_bot(e);
-                        break;
-
-                    case "clean":
-                        clean(e);
                         break;
 
                     default:
@@ -94,21 +86,10 @@ namespace discordbot_cs
 
         private static async void exit_bot(MessageEventArgs e)
         {
-            if (e.User.ToString() != "Nopply#9852") return;
+            if (e.User.ToString() != "Nopply#9852" && e.User.ToString() != "Penguino#9845") return;
             await e.Channel.SendMessage("Exiting... :skull_crossbones: ");
             Thread.Sleep(1000);
             Environment.Exit(0);
-        }
-
-        private static async void get_time(MessageEventArgs e)
-        {
-            DateTime now = DateTime.Now;
-            await e.Channel.SendMessage(now.ToString() + " :alarm_clock:");
-        }
-
-        private static async void clean(MessageEventArgs e)
-        {
-
         }
     }
  }
