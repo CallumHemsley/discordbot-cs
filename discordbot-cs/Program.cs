@@ -1,4 +1,7 @@
 ﻿using Discord;
+using Discord.Commands;
+using Discord.Commands.Permissions.Levels;
+using Discord.Modules;
 using Discord.Legacy;
 using System;
 using System.Linq;
@@ -8,8 +11,29 @@ namespace discordbot_cs
 {
     class Program
     {
-        static void Main(string[] args)
+        static void Main(string[] args) => new Program().Start(args);
+
+        private const string AppName = "Nopplybot";
+        private DiscordClient _client;
+
+        private void Start(string[] args)
         {
+            _client = new DiscordClient(x =>
+            {
+                x.AppName = AppName;
+                x.MessageCacheSize = 10;
+                x.EnablePreUpdateEvents = true;
+            })
+            .UsingCommands(x =>
+            {
+                x.AllowMentionPrefix = true;
+                x.PrefixChar = 'NP-';
+                x.HelpMode = HelpMode.Public;
+                x.ExecuteHandler += (s, e) => _client.Log.Info("Command", $"[{((e.Server != null) ? e.Server.Name : "Private")}{((!e.Channel.IsPrivate) ? $"/#{e.Channel.Name}" : "")}] <@{e.User.Name}> {e.Command.Text} {((e.Args.Length > 0) ? "| " + string.Join(" ", e.Args) : "")}");
+                x.ErrorHandler = CommandError;
+            })
+        }
+        /*{
             var client = new DiscordClient();
 
             #pragma warning disable CS1998
@@ -75,5 +99,5 @@ namespace discordbot_cs
         {
 
         }
+    }*/
     }
-}
