@@ -33,6 +33,7 @@ namespace discordbot_cs
                 x.AllowMentionPrefix = true;
                 x.PrefixChar = '#';
                 x.HelpMode = HelpMode.Public;
+                x.ErrorHandler = OnCommandError;
             })
             .UsingModules();
 
@@ -50,12 +51,16 @@ namespace discordbot_cs
                 // message command switch.
                 switch (e.Message.Text)
                 {
-                    case "test":
-                        await e.Channel.SendMessage("test confirmed");
+                    case "hello":
+                        await e.Channel.SendMessage("waddup");
                         break;
 
                     case "exit":
                         exit_bot(e);
+                        break;
+
+                    case "clean":
+                        clean(e);
                         break;
 
                     default:
@@ -72,6 +77,8 @@ namespace discordbot_cs
                     try
                     {
                         await client.Connect("MTcwOTIxNjQwMDE4OTY4NTc2.CgC43A.YehTx9EojzDxU4NrLoIr4hQu3XQ");
+                        client.SetGame("Type #help for help.");
+                        Console.WriteLine("Connected :)");
                         break;
                     }
                     catch (Exception ex)
@@ -86,10 +93,51 @@ namespace discordbot_cs
 
         private static async void exit_bot(MessageEventArgs e)
         {
-            if (e.User.ToString() != "Nopply#9852" && e.User.ToString() != "Penguino#9845") return;
+            if (e.User.ToString() != "Nopply#9852") return;
             await e.Channel.SendMessage("Exiting... :skull_crossbones: ");
             Thread.Sleep(1000);
             Environment.Exit(0);
+        }
+
+        private static async void get_time(MessageEventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            await e.Channel.SendMessage(now.ToString() + " :alarm_clock:");
+        }
+
+        private static async void clean(MessageEventArgs e)
+        {
+
+        }
+        private void OnCommandError(object sender, CommandErrorEventArgs e)
+        {
+            string msg = e.Exception?.Message;
+            if (msg == null) //No exception - show a generic message
+            {
+                switch (e.ErrorType)
+                {
+                    case CommandErrorType.Exception:
+                        msg = "Unknown error.";
+                        break;
+                    case CommandErrorType.BadPermissions:
+                        msg = "You do not have permission to run this command.";
+                        break;
+                    case CommandErrorType.BadArgCount:
+                        msg = "You provided the incorrect number of arguments for this command.";
+                        break;
+                    case CommandErrorType.InvalidInput:
+                        msg = "Unable to parse your command, please check your input.";
+                        break;
+                    case CommandErrorType.UnknownCommand:
+                        msg = "Unknown command.";
+                        break;
+                }
+            }
+            if (msg != null)
+            {
+                client.ReplyError(e, msg);
+                client.Log.Error("Command", msg);
+            }
         }
     }
  }
