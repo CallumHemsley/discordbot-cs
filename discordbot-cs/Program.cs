@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using System.Threading;
 
 namespace discordbot_cs
 {
@@ -35,85 +36,79 @@ namespace discordbot_cs
             })
             .UsingModules();
 
-            client.MessageReceived += async (s, e) =>
+            #pragma warning disable CS1998
+
+            // Async method lacks 'await' operators and will run synchronously
+            client.MessageReceived += async (s, e) => //e = event basically..
             {
-            }
-            /*{
-                var client = new DiscordClient();
+                // bot ignores itself.
+                if (e.Message.IsAuthor) return;
 
-                #pragma warning disable CS1998
+                // logs to console.
+                Console.WriteLine(e.Message);
 
-                // Async method lacks 'await' operators and will run synchronously
-                client.MessageReceived += async (s, e) => //e = event basically..
+                // message command switch.
+                switch (e.Message.Text)
                 {
-                    // bot ignores itself.
-                    if (e.Message.IsAuthor) return;
+                    case "hello":
+                        await e.Channel.SendMessage("waddup");
+                        break;
 
-                    // logs to console.
-                    Console.WriteLine(e.Message);
+                    case "time":
+                        get_time(e);
+                        break;
 
-                    // message command switch.
-                    switch (e.Message.Text)
-                    {
-                        case "hello":
-                            await e.Channel.SendMessage("waddup");
-                            break;
+                    case "exit":
+                        exit_bot(e);
+                        break;
 
-                        case "time":
-                            get_time(e);
-                            break;
+                    case "clean":
+                        clean(e);
+                        break;
 
-                        case "exit":
-                            exit_bot(e);
-                            break;
-
-                        case "clean":
-                            clean(e);
-                            break;
-
-                        default:
-                            break;
-                    }
-                };
-                #pragma warning restore CS1998
-
-                //Convert our sync method to an async one and block the Main function until the bot disconnects
-                client.ExecuteAndWait(async () =>
+                    default:
+                        break;
+                }
+            };
+            #pragma warning restore CS1998
+            
+            //Convert our sync method to an async one and block the Main function until the bot disconnects
+            client.ExecuteAndWait(async () =>
+            {
+                while (true)
                 {
-                    while (true)
+                    try
                     {
-                        try
-                        {
-                            await client.Connect("MTcwOTIxNjQwMDE4OTY4NTc2.CgC43A.YehTx9EojzDxU4NrLoIr4hQu3XQ");
-                            break;
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
-                            Thread.Sleep(1000);
-                        }
+                        await client.Connect("MTcwOTIxNjQwMDE4OTY4NTc2.CgC43A.YehTx9EojzDxU4NrLoIr4hQu3XQ");
+                        break;
                     }
-                });
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        Thread.Sleep(1000);
+                    }
+                }
+            });
 
-            }
-
-            private static async void exit_bot(MessageEventArgs e)
-            {
-                if (e.User.ToString() != "Nopply#9852") return;
-                await e.Channel.SendMessage("Exiting... :skull_crossbones: ");
-                Thread.Sleep(1000);
-                Environment.Exit(0);
-            }
-
-            private static async void get_time(MessageEventArgs e)
-            {
-                DateTime now = DateTime.Now;
-                await e.Channel.SendMessage(now.ToString() + " :alarm_clock:");
-            }
-
-            private static async void clean(MessageEventArgs e)
-            {
-
-            }
-        }*/
         }
+
+        private static async void exit_bot(MessageEventArgs e)
+        {
+            if (e.User.ToString() != "Nopply#9852") return;
+            await e.Channel.SendMessage("Exiting... :skull_crossbones: ");
+            Thread.Sleep(1000);
+            Environment.Exit(0);
+        }
+
+        private static async void get_time(MessageEventArgs e)
+        {
+            DateTime now = DateTime.Now;
+            await e.Channel.SendMessage(now.ToString() + " :alarm_clock:");
+        }
+
+        private static async void clean(MessageEventArgs e)
+        {
+
+        }
+    }
+ }
