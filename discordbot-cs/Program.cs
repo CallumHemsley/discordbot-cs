@@ -51,8 +51,19 @@ namespace discordbot_cs
             //Convert our sync method to an async one and block the Main function until the bot disconnects
             client.ExecuteAndWait(async () =>
             {
-                //Connect to the Discord server using our email and password
-                await client.Connect("MTcwOTIxNjQwMDE4OTY4NTc2.CgC43A.YehTx9EojzDxU4NrLoIr4hQu3XQ");
+                while (true)
+                {
+                    try
+                    {
+                        await client.Connect("MTcwOTIxNjQwMDE4OTY4NTc2.CgC43A.YehTx9EojzDxU4NrLoIr4hQu3XQ");
+                        break;
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine(ex);
+                        Thread.Sleep(1000);
+                    }
+                }
             });
 
         }
