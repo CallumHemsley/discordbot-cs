@@ -14,11 +14,11 @@ namespace discordbot_cs
         static void Main(string[] args) => new Program().Start(args);
 
         private const string AppName = "Nopplybot";
-        private DiscordClient _client;
+        private DiscordClient client;
 
         private void Start(string[] args)
         {
-            _client = new DiscordClient(x =>
+            client = new DiscordClient(x =>
             {
                 x.AppName = AppName;
                 x.MessageCacheSize = 10;
@@ -27,11 +27,11 @@ namespace discordbot_cs
             .UsingCommands(x =>
             {
                 x.AllowMentionPrefix = true;
-                x.PrefixChar = 'NP-';
+                x.PrefixChar = '#';
                 x.HelpMode = HelpMode.Public;
-                x.ExecuteHandler += (s, e) => _client.Log.Info("Command", $"[{((e.Server != null) ? e.Server.Name : "Private")}{((!e.Channel.IsPrivate) ? $"/#{e.Channel.Name}" : "")}] <@{e.User.Name}> {e.Command.Text} {((e.Args.Length > 0) ? "| " + string.Join(" ", e.Args) : "")}");
+                x.ExecuteHandler += (s, e) => client.Log.Info("Command", $"[{((e.Server != null) ? e.Server.Name : "Private")}{((!e.Channel.IsPrivate) ? $"/#{e.Channel.Name}" : "")}] <@{e.User.Name}> {e.Command.Text} {((e.Args.Length > 0) ? "| " + string.Join(" ", e.Args) : "")}");
                 x.ErrorHandler = CommandError;
-            })
+            });
         }
         /*{
             var client = new DiscordClient();
