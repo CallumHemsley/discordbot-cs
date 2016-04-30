@@ -73,11 +73,16 @@ namespace discordbot_cs
                     \b       -match the closing word boundary. */
                     Regex linkParser = new Regex(@"\b(?:https?://|www\.)\S+\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
                     int counter = 0;
-                    foreach (Match m in linkParser.Matches(e.Message.RawText))
+                    foreach (Match m in linkParser.Matches(e.Message.ToString()))
                     {
                         counter++;
                     }
-                    if (counter < 1 || counter > 1) return;
+                    if (counter < 1)
+                    {
+                        await e.Channel.SendMessage("Too many/ No links in message.");
+                        return;
+                    }
+                    //We need to count the remainder characters after the link or just be lazy and say >75 instead of spliting, up to you.
 
                 }
                 // logs to console.
