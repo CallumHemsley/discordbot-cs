@@ -33,7 +33,7 @@ namespace discordbot_cs
             .UsingCommands(x =>
             {
                 x.AllowMentionPrefix = true;
-                x.PrefixChar = '#';
+                x.PrefixChar = '-';
                 x.HelpMode = HelpMode.Public;
                 x.ErrorHandler = OnCommandError;
             })
@@ -41,29 +41,33 @@ namespace discordbot_cs
 
             #pragma warning disable CS1998
 
+            client.Services.Get<CommandService>().CreateCommand("info") //create command greet
+                .Description("General information about the bot.") //add description, it will be shown when ~help is used
+                .Do(async e =>
+                {
+                    await e.Channel.SendMessage($"Information about the bot will go here..");
+                    //sends a message to channel with the given text
+                });
+
+            client.Services.Get<CommandService>().CreateCommand("exit")
+                .Description("Bot will exit everything, can only be used by Devs.")
+                .Do(async e =>
+                {
+                    exit_bot(e);
+                });
             // Async method lacks 'await' operators and will run synchronously
             client.MessageReceived += async (s, e) => //e = event basically..
-            {
+            { 
                 // bot ignores itself.
                 if (e.Message.IsAuthor) return;
-
+                if (e.Channel.ToString() == "cd_newsfeed")
+                {
+                    string text = Regex.Replace(e.Message.RawText,
+                @"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)",
+                "<a target='_blank' href='$1'>$1</a>");
+                }
                 // logs to console.
                 Console.WriteLine(e.Message);
-
-                // message command switch.
-                switch (e.Message.Text)
-                {
-                    case "test":
-                        await e.Channel.SendMessage("Confirmed");
-                        break;
-
-                    case "exit":
-                        exit_bot(e);
-                        break;
-
-                    default:
-                        break;
-                }
             };
             #pragma warning restore CS1998
             
@@ -89,7 +93,7 @@ namespace discordbot_cs
 
         }
 
-        private static async void exit_bot(MessageEventArgs e)
+        private static async void exit_bot(CommandEventArgs e)
         {
             if (e.User.ToString() != "Nopply#9852") return;
             await e.Channel.SendMessage("Exiting... :skull_crossbones: ");
@@ -116,9 +120,7 @@ namespace discordbot_cs
                     case CommandErrorType.InvalidInput:
                         msg = "Unable to parse your command, please check your input.";
                         break;
-                    case CommandErrorType.UnknownCommand:
-                        msg = "Unknown command.";
-                        break;
+
                 }
             }
             if (msg != null)
