@@ -18,7 +18,7 @@ namespace discordbot_cs
     class Program
     {
         static void Main(string[] args) => new Program().Start(args);
-
+        
         private const string AppName = "Nopplybot";
         private DiscordClient client;
 
@@ -60,31 +60,12 @@ namespace discordbot_cs
             { 
                 // bot ignores itself.
                 if (e.Message.IsAuthor) return;
+
                 if (e.Channel.ToString() == "cd_newsfeed")
                 {
-                    /* Regex explanation:
-                    \b       -matches a word boundary (spaces, periods..etc)
-                    (?:      -define the beginning of a group, the ?: specifies not to capture the data within this group.
-                    https?://  - Match http or https (the '?' after the "s" makes it optional)
-                    |        -OR
-                    www\.    -literal string, match www. (the \. means a literal ".")
-                    )        -end group
-                    \S+      -match a series of non-whitespace characters.
-                    \b       -match the closing word boundary. */
-                    Regex linkParser = new Regex(@"\b(?:https?://|www\.)\S+\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
-                    int counter = 0;
-                    foreach (Match m in linkParser.Matches(e.Message.ToString()))
-                    {
-                        counter++;
-                    }
-                    if (counter < 1)
-                    {
-                        await e.Channel.SendMessage("Too many/ No links in message.");
-                        return;
-                    }
-                    //We need to count the remainder characters after the link or just be lazy and say >75 instead of spliting, up to you.
-
+                    newsfeed_check(e);
                 }
+
                 // logs to console.
                 Console.WriteLine(e.Message);
             };
@@ -118,6 +99,32 @@ namespace discordbot_cs
             await e.Channel.SendMessage("Exiting... :skull_crossbones: ");
             Thread.Sleep(1000);
             Environment.Exit(0);
+        }
+
+        private static async void newsfeed_check(MessageEventArgs e)
+        {
+            Regex linkParser = new Regex(@"\b(?:https?://|www\.)\S+\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+            int counter = 0;
+            foreach (Match m in linkParser.Matches(e.Message.ToString()))
+            {
+                counter++;
+            }
+            if (counter < 1 || counter > 1)
+            {
+                await e.Channel.SendMessage("Too many / No links in message.");
+                await e.Message.Delete();
+                return;
+            }
+
+            int linklength = e.Message.RawText.ToString().Split(' ')[0].Length;
+
+            if (e.Message.RawText.Length > 50 + linklength)
+            {
+                await e.Channel.SendMessage("Description is too big.");
+                await e.Message.Delete();
+                return;
+            }
+
         }
 
         private void OnCommandError(object sender, CommandErrorEventArgs e)
