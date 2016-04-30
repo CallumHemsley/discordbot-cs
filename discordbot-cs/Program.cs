@@ -82,6 +82,7 @@ namespace discordbot_cs
                         await e.Channel.SendMessage("Too many/ No links in message.");
                         return;
                     }
+                    //We need to count the remainder characters after the link or just be lazy and say >75 instead of spliting, up to you.
 
                 }
                 // logs to console.
