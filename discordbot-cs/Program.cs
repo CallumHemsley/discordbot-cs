@@ -55,6 +55,29 @@ namespace discordbot_cs
                 {
                     exit_bot(e);
                 });
+
+            client.Services.Get<CommandService>().CreateGroup("clean", cgb =>
+            {
+                cgb.CreateCommand("me")
+                    .Description("Cleans the user's last 100 or so messages. Not sure how many yet. (in that channel only.)")
+                    .Do(async e =>
+                    {
+                        //Call function here.
+                    });
+                cgb.CreateCommand("user")
+                    .Description("Cleans the user's last 100 or so messages. Not sure how many yet. (in that channel only. Only used by admins.)")
+                    .Parameter("User", ParameterType.Required)
+                    .Do(async e =>
+                    {
+                        //Call function here.
+                    });
+                cgb.CreateCommand("bot")
+                    .Description("Cleans the user's last 100 or so messages. Not sure how many yet. (in that channel only. Only used by admins.)")
+                    .Do(async e =>
+                    {
+                        //Call function here.
+                    });
+            });
             // Async method lacks 'await' operators and will run synchronously
             client.MessageReceived += async (s, e) => //e = event basically..
             { 
