@@ -62,9 +62,23 @@ namespace discordbot_cs
                 if (e.Message.IsAuthor) return;
                 if (e.Channel.ToString() == "cd_newsfeed")
                 {
-                    string text = Regex.Replace(e.Message.RawText,
-                @"((http|ftp|https):\/\/[\w\-_]+(\.[\w\-_]+)+([\w\-\.,@?^=%&amp;:/~\+#]*[\w\-\@?^=%&amp;/~\+#])?)",
-                "<a target='_blank' href='$1'>$1</a>");
+                    /* Regex explanation:
+                    \b       -matches a word boundary (spaces, periods..etc)
+                    (?:      -define the beginning of a group, the ?: specifies not to capture the data within this group.
+                    https?://  - Match http or https (the '?' after the "s" makes it optional)
+                    |        -OR
+                    www\.    -literal string, match www. (the \. means a literal ".")
+                    )        -end group
+                    \S+      -match a series of non-whitespace characters.
+                    \b       -match the closing word boundary. */
+                    Regex linkParser = new Regex(@"\b(?:https?://|www\.)\S+\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+                    int counter = 0;
+                    foreach (Match m in linkParser.Matches(e.Message.RawText))
+                    {
+                        counter++;
+                    }
+                    if (counter < 1) return;
+
                 }
                 // logs to console.
                 Console.WriteLine(e.Message);
