@@ -77,7 +77,7 @@ namespace discordbot_cs
                     {
                         counter++;
                     }
-                    if (counter < 1) return;
+                    if (counter < 1 || counter > 1) return;
 
                 }
                 // logs to console.
