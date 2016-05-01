@@ -77,6 +77,13 @@ namespace discordbot_cs
                     {
                         //Call function here.
                     });
+                cgb.CreateCommand("anus")
+                    .Description("No sorry, i'm not going to clean your anus.")
+                    .Do(async e =>
+                    {
+                        //Call function here.
+                    });
+
             });
             // Async method lacks 'await' operators and will run synchronously
             client.MessageReceived += async (s, e) => //e = event basically..
