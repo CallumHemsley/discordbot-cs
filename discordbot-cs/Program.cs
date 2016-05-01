@@ -126,6 +126,10 @@ namespace discordbot_cs
 
         private static async void newsfeed_check(MessageEventArgs e)
         {
+            // Create a Channel object by searching for a channel named '#mod-log' on the server the ban occurred in.
+            var logChannel = e.Server.FindChannels("mod-log").FirstOrDefault();
+            DateTime now = DateTime.Now;
+
             Regex linkParser = new Regex(@"\b(?:https?://|www\.)\S+\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
             int counter = 0;
             foreach (Match m in linkParser.Matches(e.Message.ToString()))
@@ -136,6 +140,10 @@ namespace discordbot_cs
             {
                 await e.Channel.SendMessage("Too many / No links in message.");
                 await e.Message.Delete();
+                await logChannel.SendMessage($"In **{e.Channel.ToString()}** I deleted a post for having no link or too many links." + "\r\n"
+                    + "\r\n" + $"From: **{e.User.ToString()}**"
+                    + "\r\n" + $"Date: **{now}**" + "\r\n"
+                    + "\r\n" + $"```{e.Message.ToString()}```");
                 return;
             }
 
@@ -143,8 +151,12 @@ namespace discordbot_cs
 
             if (e.Message.RawText.Length > 50 + linklength)
             {
-                await e.Channel.SendMessage("Description is too big.");
+                await e.Channel.SendMessage("Your description was too big. 50 words or less.");
                 await e.Message.Delete();
+                await logChannel.SendMessage($"In **{e.Channel.ToString()}** I deleted a post for having too big of a description." + "\r\n"
+                    + "\r\n" + $"From: **{e.User.ToString()}**"
+                    + "\r\n" + $"Date: **{now}**" + "\r\n"
+                    + "\r\n" + $"```{e.Message.ToString()}```");
                 return;
             }
 
